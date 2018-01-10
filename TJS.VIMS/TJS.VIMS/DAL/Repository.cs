@@ -9,7 +9,7 @@ namespace TJS.VIMS.DAL
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         protected readonly VIMSDBContext context = null;
-        private readonly DbSet<TEntity> entities = null;
+        protected readonly DbSet<TEntity> entities = null;
         private bool disposed = false;
 
         public VIMSDBContext Context
@@ -40,7 +40,7 @@ namespace TJS.VIMS.DAL
 
         public TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
-            return entities.SingleOrDefault(predicate);
+             return entities.SingleOrDefault(predicate);
         }
 
         public void Add(TEntity entity)
@@ -85,5 +85,7 @@ namespace TJS.VIMS.DAL
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+
     }
 }

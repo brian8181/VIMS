@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 
 namespace TJS.VIMS.DAL
@@ -9,31 +10,57 @@ namespace TJS.VIMS.DAL
         {
         }
 
-        public Employee GetEmployee(string userName, string password)
+        public Employee GetByNamePass(string userName, string password)
         {
             return SingleOrDefault(m => m.UserName.ToLower() == userName.ToLower() && m.Password == password);
         }
-
-
-
-        public bool CreateEmployee(int admin_id, Employee employee)
+        
+        public Employee GetByAspId(string asp_id)
         {
-            //Employee current_employee = context.Employees.Find(employee.Id);
-            //if (employee != null && (bool)employee.Active) // BKP fix should not be nullable
-            //{
-            //    int count = context.Employees.
-            //        Where(m => m.UserName == employee.UserName && m.Id != employee.Id).
-            //        Count();
+            return context.Employees.Where(e => e.AspNetUsers_Id == asp_id).SingleOrDefault();
+        }
 
-            //    if (count == 0)
-            //    {
-            //        employee.UpdatedBy = admin_id;
-            //        employee.UpdatedDt = System.DateTime.Now;
-            //        context.Entry(current_employee).CurrentValues.SetValues(employee);
-            //        context.SaveChanges();
-            //        return View("EditemployeeConfirmation", employee);
-            //    }
-            //}
+        public bool Create(Employee employee)
+        {
+            int count = Find(m => m.UserName == employee.UserName).Count();
+            if (count == 0)
+            {
+                employee.Active = true;
+                employee.CreatedDt = DateTime.Now;
+                employee.UpdatedBy = null; // reset to null if not already
+                employee.UpdatedDt = null; // reset to null if not already
+                Add(employee);
+                return true;
+            }
+            return false;
+        }
+
+        public bool Delete(long id)
+        {
+            Employee employee = Find((int)id); //BKP should be long
+            if (employee != null && (bool)employee.Active)
+            {
+                employee.Active = false;
+                employee.UpdatedDt = DateTime.Now;
+                return true;
+            }
+            return false;
+        }
+
+        public bool Update(Employee employee)
+        {
+            Employee current_employee = Find((int)employee.Id);
+            if (employee != null && (bool)employee.Active) // BKP fix should not be nullable
+            {
+                int count = Find(m => m.UserName == employee.UserName && m.Id != employee.Id).Count();
+                if (count == 0)
+                {
+                    employee.UpdatedDt = System.DateTime.Now;
+                    context.Entry(employee).State = EntityState.Modified;
+                    //context.Entry(current_employee).CurrentValues.SetValues(employee);
+                    return true;
+                }
+            }
             return false;
         }
 

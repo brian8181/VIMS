@@ -15,7 +15,7 @@ namespace TJS.VIMS.Controllers
         // need to dispose !
 
         [HttpGet]
-        public ActionResult Start()
+        public ActionResult Index()
         {
 
             string id = User.Identity.GetUserId();
@@ -156,14 +156,16 @@ namespace TJS.VIMS.Controllers
         [HttpPost]
         public ActionResult CreateEmployee(Employee employee)
         {
-            bool success = false;
             if (ModelState.IsValid)
             {
                 using (AdministrationRepository repo = new AdministrationRepository())
                 { 
-                    success = repo.CreateEmployee(employee);
-                    repo.Save();
-                    if (success) View("CreateEmployeeConfirmation");
+                    if(repo.EmployeeUserNameExist(employee.UserName))
+                    {
+                        // todo user name not unique view()
+                    }
+                    if(repo.CreateEmployee(employee))
+                        View("CreateEmployeeConfirmation");
                 }
             }
             return View("Error");

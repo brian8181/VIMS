@@ -48,21 +48,22 @@ namespace TJS.VIMS.DAL
             return context.Employees.Where(e => e.AspNetUsers_Id == asp_id).SingleOrDefault();
         }
 
+        public bool EmployeeUserNameExist(string userName)
+        {
+            return context.Employees.
+                    Where(m => m.UserName == userName).Count() != 0;
+        }
+
         public bool CreateEmployee(Employee employee)
         {
-            int count = context.Employees.
-                    Where(m => m.UserName == employee.UserName).Count();
-            if (count == 0)
-            {
-                employee.Active = true;
-                employee.CreatedDt = DateTime.Now;
-                employee.UpdatedBy = null; // reset to null if not already
-                employee.UpdatedDt = null; // reset to null if not already
-                context.Employees.Add(employee);
-                //context.SaveChanges();
-                return true;
-            }
-            return false;
+            employee.Active = true;
+            employee.CreatedDt = DateTime.Now;
+            employee.UpdatedBy = null; // reset to null if not already
+            employee.UpdatedDt = null; // reset to null if not already
+            context.Employees.Add(employee);
+            context.SaveChanges();
+
+            return true;
         }
 
         public bool CreateOrganization(Organization organization)
@@ -76,7 +77,7 @@ namespace TJS.VIMS.DAL
                 organization.UpdatedBy = null; // reset to null if not already
                 organization.UpdatedDt = null; // reset to null if not already
                 context.Organizations.Add(organization);
-                //context.SaveChanges();
+                context.SaveChanges();
                 return true;
             }
             return false;
@@ -89,7 +90,7 @@ namespace TJS.VIMS.DAL
             {
                 employee.Active = false;
                 employee.UpdatedDt = DateTime.Now;
-                //context.SaveChanges();
+                context.SaveChanges();
                 return true;
             }
             return false;
@@ -102,7 +103,7 @@ namespace TJS.VIMS.DAL
             {
                 organization.Active = false;
                 organization.UpdatedDt = DateTime.Now;
-                //context.SaveChanges();
+                context.SaveChanges();
                 return true;
             }
             return false;

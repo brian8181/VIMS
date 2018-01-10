@@ -167,7 +167,7 @@ namespace TJS.VIMS.Controllers
             model.LocationId = (int)location.Id;
             model.LocationName = location.Name; 
             model.TimeLogged = VolunteerClockedInOutViewModel.GetHoursLogged(volunteerInfoRepository.GetVolunteersCompletedInOutInfos(volunteer));
-            model.RecentClockInformation = volunteerInfoRepository.GetVolunteersRecentClockInOutInfos(volunteer, Util.TJSConstants.RECENT_LIST_LEN);
+            model.RecentClockInformation = volunteerInfoRepository.GetVolunteersRecentClockInOutInfos(volunteer, Utility.Globals.RECENT_LIST_LEN);
             model.CaseNumber = profile != null ? profile.CaseNumber : "NA";
             model.TimeNeeded = profile != null ? new TimeSpan((short)profile.Volunteer_Hours_Needed, 0, 0) : new TimeSpan(0, 0, 0);
 
@@ -237,7 +237,7 @@ namespace TJS.VIMS.Controllers
             string name = Guid.NewGuid().ToString("N") + ".jpg"; //BKP can I be sure is always a jpeg?
 
             var path = Server.MapPath("~/Capture/" + name);
-            System.IO.File.WriteAllBytes(path, Util.Utility.HexToBytes(dump));
+            System.IO.File.WriteAllBytes(path, Utility.Utility.HexToBytes(dump));
 
             DbContext context = ((Repository<Volunteer>)volunteerInfoRepository).Context;
             Volunteer volunteer = volunteerInfoRepository.GetVolunteerById(userId);

@@ -8,12 +8,19 @@ using System.Web;
 using System.Web.Mvc;
 using TJS.VIMS.DAL;
 using TJS.VIMS.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Owin;
+using Owin;
+using System.Security.Claims;
 
 namespace TJS.VIMS.Controllers
 {
     public class EmployeesController : Controller
     {
         private VIMSDBContext db = new VIMSDBContext();
+
+     
 
         // GET: Employees
         public ActionResult Index()
@@ -29,7 +36,7 @@ namespace TJS.VIMS.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Employee employee = db.Employees.Find(id);
-            if (employee == null)
+            if (employee == null || employee.Active == false)
             {
                 return HttpNotFound();
             }
@@ -47,13 +54,32 @@ namespace TJS.VIMS.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Create([Bind(Include = "Id,FirstName,LastName,UserName,Password,Admin,Active,CreatedBy,CreatedDt,UpdatedBy,UpdatedDt")] Employee employee)
         {
             if (ModelState.IsValid)
             {
                 employee.Active = true;
-                //todo employee.CreatedBy = 0;
+                EmployeeRepository r = new EmployeeRepository(db);
+                string admin_id = User.Identity.GetUserId();
+                employee.CreatedBy = r.GetByAspId(admin_id).Id; 
                 employee.CreatedDt = DateTime.Now;
+
+                // add to Identity
+                //var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
+                //var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+                //var user = new ApplicationUser();
+                //user.UserName = employee.UserName;
+                //var result = UserManager.Create(user, employee.Password);
+                ////Add default User to Role Admin
+                //if (result.Succeeded)
+                //{
+                //    var result1 = UserManager.AddToRole(user.Id, "Employee");
+                //    var result2 = UserManager.AddToRole(user.Id, "Administrator");
+                //}
+
+                //employee.AspNetUsers_Id = user.Id;
+
                 db.Employees.Add(employee);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -86,8 +112,12 @@ namespace TJS.VIMS.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(employee).State = EntityState.Modified;
-                db.SaveChanges();
+                EmployeeRepository r = new EmployeeRepository(db);
+                string asp_id = User.Identity.GetUserId();
+                employee.UpdatedBy = r.GetByAspId(asp_id).Id;
+                employee.CreatedDt = DateTime.Now;
+                r.Update(employee);
+                r.Save();
                 return RedirectToAction("Index");
             }
             return View(employee);

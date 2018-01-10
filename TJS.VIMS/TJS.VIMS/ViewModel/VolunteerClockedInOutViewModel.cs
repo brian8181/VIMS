@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using TJS.VIMS.Models;
-using TJS.VIMS.Util;
+using TJS.VIMS.Utility;
 
 namespace TJS.VIMS.ViewModel
 {

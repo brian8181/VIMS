@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -236,8 +237,8 @@
     <Compile Include="Reports\VolunteersAll.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Models\State.cs" />
-    <Compile Include="Util\TJSConstants.cs" />
-    <Compile Include="Util\Utility.cs" />
+    <Compile Include="Utility\TJSConstants.cs" />
+    <Compile Include="Utility\Utility.cs" />
     <Compile Include="ViewModel\AccountViewModels.cs" />
     <Compile Include="ViewModel\EditLocationsViewModel.cs" />
     <Compile Include="ViewModel\AuthorizedViewModel.cs" />
@@ -354,7 +355,7 @@
     <Content Include="Views\Administration\NoShows.cshtml" />
     <Content Include="Views\Administration\TestView.cshtml" />
     <Content Include="Views\Administration\VolunteersReport.cshtml" />
-    <Content Include="Views\Administration\Start.cshtml" />
+    <Content Include="Views\Administration\Index.cshtml" />
     <Content Include="Views\Administration\CreateEmployeeConfirmation.cshtml" />
     <Content Include="Views\Administration\DeleteEmployeeConfirmation.cshtml" />
     <Content Include="Views\Administration\CreateOrganizationConfirmation.cshtml" />
