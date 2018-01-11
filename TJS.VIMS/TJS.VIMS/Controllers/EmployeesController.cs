@@ -65,26 +65,27 @@ namespace TJS.VIMS.Controllers
                 employee.CreatedBy = r.GetByAspId(admin_id).Id; 
                 employee.CreatedDt = DateTime.Now;
 
+                ApplicationDbContext identity_context = new ApplicationDbContext();
                 // add to Identity
-                //var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
-                //var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
-                //var user = new ApplicationUser();
-                //user.UserName = employee.UserName;
-                //var result = UserManager.Create(user, employee.Password);
-                ////Add default User to Role Admin
-                //if (result.Succeeded)
-                //{
-                //    var result1 = UserManager.AddToRole(user.Id, "Employee");
-                //    var result2 = UserManager.AddToRole(user.Id, "Administrator");
-                //}
+                var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(identity_context));
+                var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(identity_context));
+                var user = new ApplicationUser();
+                user.UserName = employee.UserName;
+                var result = UserManager.Create(user, employee.Password);
+                //Add default User to Role Admin
+                if (result.Succeeded)
+                {
+                    var result1 = UserManager.AddToRole(user.Id, "Employee");
+                    var result2 = UserManager.AddToRole(user.Id, "Administrator");
 
-                //employee.AspNetUsers_Id = user.Id;
+                    employee.AspNetUsers_Id = user.Id;
 
-                db.Employees.Add(employee);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                    db.Employees.Add(employee);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-
+            //BKP todo error
             return View(employee);
         }
 
