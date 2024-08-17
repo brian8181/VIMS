@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace TJS.VIMS.Models
+namespace TJS.VIMS.ViewModel
 {
     public class ExternalLoginConfirmationViewModel
     {

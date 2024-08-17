@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 
-namespace TJS.VIMS.Models
+namespace TJS.VIMS.ViewModel
 {
     public class IndexViewModel
     {

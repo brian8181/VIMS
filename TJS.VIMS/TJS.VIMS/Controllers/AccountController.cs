@@ -99,7 +99,7 @@ namespace TJS.VIMS.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> Login(LogInViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
             {
@@ -108,7 +108,9 @@ namespace TJS.VIMS.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
+            // JS: model.rememberMe seems unused, effectively commenting it out for now.
+            var rememberMe = false;
+            var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, rememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
